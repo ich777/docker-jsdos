@@ -3,7 +3,7 @@ FROM ubuntu
 MAINTAINER ich777
 
 RUN apt-get update
-RUN apt-get -y install wget
+RUN apt-get -y install wget curl
 
 ENV SERVER_DIR=/jsdos
 ENV UMASK=000
