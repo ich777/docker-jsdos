@@ -12,6 +12,9 @@ fi
 if [ -z "${START_FILE}" ]; then
         echo "---Variable 'START_FILE' can't be empty, putting server into sleep mode---"
 fi
+if [ -z "${BG_COLOR}" ]; then
+        echo "---Variable 'BG_COLOR' can't be empty, putting server into sleep mode---"
+fi
 if [ ! -d ${SERVER_DIR}/${APP_NAME} ]; then
         echo "---Installing ${APP_NAME}---"
     if [ ! -f ${SERVER_DIR}/${ZIP_NAME}.zip ]; then
@@ -21,6 +24,7 @@ if [ ! -d ${SERVER_DIR}/${APP_NAME} ]; then
         cd ${SERVER_DIR}
         npx create-dosbox ${APP_NAME} ${ZIP_NAME}.zip
         cd ${SERVER_DIR}/${APP_NAME}
+        sed '2a\<style>\n\tbackground-color: #000000;\n}\n</style>' ${SERVER_DIR}/${APP_NAME}/public/index.html
         sed -i '/fs.extract("/c\\tfs.extract("'${ZIP_NAME}'.zip", "/GAME").then(() => {' ${SERVER_DIR}/${APP_NAME}/public/index.html
         sed -i '/main(\["-c", "/c\\t\tmain(\["-c", "cd GAME", "-c", "'${START_FILE}'"\])' ${SERVER_DIR}/${APP_NAME}/public/index.html
         echo "\n" | npm install
@@ -46,6 +50,9 @@ if [ "${CUSTOM_RES_H}" -le 399 ]; then
 fi
 sed -i '/width: /c\\twidth: '${CUSTOMR_RES_W}'px;' ${SERVER_DIR}/${APP_NAME}/public/index.html
 sed -i '/height: /c\\theight: '${CUSTOMR_RES_H}'px;' ${SERVER_DIR}/${APP_NAME}/public/index.html
+sed '2a\<style>\n\tbackground-color: #'${BG_COLOR}';\n}\n</style>' ${SERVER_DIR}/${APP_NAME}/public/index.html
+
+
 chmod -R 777 ${SERVER_DIR}
 
 echo "---Starting Application: ${APP_NAME}---"
