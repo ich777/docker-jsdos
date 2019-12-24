@@ -11,7 +11,7 @@ fi
 if [ -z "${START_FILE}" ]; then
 	echo "---Variable 'START_FILE' can't be empty, putting server into sleep mode---"
 fi
-if [ ! -d ${SERVER_DIR}/${APP_NAME} ]; then
+if [ ! -d ${SERVER_DIR}/${APP_NAME}.zip ]; then
 	echo "---Installing ${APP_NAME}---"
     if [ ! -f ${SERVER_DIR}/${ZIP_NAME} ]; then
     	echo "---File '${ZIP_NAME}.zip' not found, putting server into sleep mode---"
