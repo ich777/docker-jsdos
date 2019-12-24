@@ -4,6 +4,8 @@ MAINTAINER ich777
 
 RUN apt-get update
 RUN apt-get -y install wget curl
+RUN curl -sL https://deb.nodesource.com/setup_13.x | bash -
+RUN apt-get -y install nodejs
 
 ENV SERVER_DIR=/jsdos
 ENV UMASK=000
