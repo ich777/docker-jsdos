@@ -5,15 +5,19 @@ umask ${UMASK}
 
 if [ -z "${APP_NAME}" ]; then
         echo "---Variable 'APP_NAME' can't be empty, putting server into sleep mode---"
+        sleep infinity
 fi
 if [ -z "${ZIP_NAME}" ]; then
         echo "---Variable 'ZIP_NAME' can't be empty, putting server into sleep mode---"
+        sleep infinity
 fi
 if [ -z "${START_FILE}" ]; then
         echo "---Variable 'START_FILE' can't be empty, putting server into sleep mode---"
+        sleep infinity
 fi
 if [ -z "${BG_COLOR}" ]; then
         echo "---Variable 'BG_COLOR' can't be empty, putting server into sleep mode---"
+        sleep infinity
 fi
 if [ ! -d ${SERVER_DIR}/${APP_NAME} ]; then
         echo "---Installing ${APP_NAME}---"
