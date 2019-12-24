@@ -18,6 +18,7 @@ RUN ulimit -n 2048
 
 ADD /scripts/ /opt/scripts/
 RUN chmod -R 770 /opt/scripts/
+RUN chown -R jsdos /opt/scripts/
 
 USER jsdos
 
