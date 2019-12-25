@@ -86,9 +86,9 @@ sed -i "/fs.extract(\"/c\        fs.extract(\"${ZIP_NAME}.zip\", \"\/game\").the
 sed -i "/main(\[\"-c\", \"cd game\", \"/c\        main(\[\"-c\", \"cd game\", \"-c\", \"${START_FILE}\"]).then((ci) => {" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 
 if [ "${FPS_C}" == "true" ]; then
-	sed "/(function(){var script=document.createElement(/c\    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+	sed -i"/(function(){var script=document.createElement(/c\    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 else
-	sed "/(function(){var script=document.createElement(/c\\/\/    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+	sed -i "/(function(){var script=document.createElement(/c\\/\/    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 fi
 chmod -R 777 ${SERVER_DIR}
 
