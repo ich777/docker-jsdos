@@ -18,7 +18,7 @@ if [ -z "${DOSBOX_V}" ]; then
 	DOSBOX_V="wdosbox-nosync"
 fi
 if [ "$APP_NAME" == "CivilisazionBI" ]; then
-	if [ ! -d ${SERVER_DIR}/CivilisatzionBI ]; then 
+	if [ ! -d ${SERVER_DIR}/CivilisazionBI ]; then 
 		cd ${SERVER_DIR}
 		if wget https://github.com/ich777/docker-jsdos/raw/master/civ.zip ; then
 			echo "---No game specified, downloaded Civilisazion!---"
