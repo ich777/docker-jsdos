@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="shortcut icon" href="favicon.ico" />
+  <meta charset="utf-8">
+  <title>js-dos 6.22</title>
+  <script src="js-dos.js"></script>
+  <style>
+    canvas {
+      width: 320px;
+      height: 200px;
+	  width: 100%;
+	  height: 100%;
+    }
+	body {
+	  width: 100%;
+	  height: 100%;
+	  margin: 0;
+	  padding: 0;
+	  background-color: #1f1f1f;
+	  color: #ffffff;
+	  font-family: 'MS Sans Serif';
+	  font-size: 12px;
+	  text-align: center;
+    }
+  button {
+	  font-size: 18px;
+	  vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    const runGame = () => {
+      const canvas = document.createElement("canvas");
+      document.body.appendChild(canvas);
+
+      Dos(canvas, { wdosboxUrl: "/JSDOSBOX_JS.js", autolock: true }).ready((fs, main) => {
+	    fs.createFile("dosbox.conf", `
+            [sdl]
+            autolock=true
+        `);
+        fs.extract(JSDOSBOX_GAME).then(() => {
+          main([JSDOSBOX_START]).then((ci) => {
+		    window.ci = ci;
+		  });
+        });
+      });
+    };
+    runGame();
+JSDOSBOX_FPS    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+</script>
+<button onclick="ci.fullscreen()">Fullscreen</button> 
+<p>Press the "Esc" key to exit full screen.</p>
+</body>
+
+</html>
