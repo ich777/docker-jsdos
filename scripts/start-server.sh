@@ -18,11 +18,14 @@ if [ -z "${DOSBOX_V}" ]; then
 	DOSBOX_V="wdosbox-nosync"
 fi
 if [ "$APP_NAME" == "CivilisazionBI" ]; then
-	if wget https://github.com/ich777/docker-jsdos/raw/master/civ.zip ; then
-		echo "---No game specified, downloaded Civilisazion!---"
-	else
-		echo "---Something went wrong, can't download initial game, putting server in sleep mode---"
-		sleep infinity
+	if [ ! -d ${SERVER_DIR}/CivilisatzionBI ]; then 
+		cd ${SERVER_DIR}
+		if wget https://github.com/ich777/docker-jsdos/raw/master/civ.zip ; then
+			echo "---No game specified, downloaded Civilisazion!---"
+		else
+			echo "---Something went wrong, can't download initial game, putting server in sleep mode---"
+			sleep infinity
+		fi
 	fi
 fi
 
