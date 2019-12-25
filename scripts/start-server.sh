@@ -64,7 +64,7 @@ fi
 
 echo "---Background color check---"
 CUR_BGND_C=$(grep -e 'background-color:' ${SERVER_DIR}/"${APP_NAME}"/public/index.html | cut -d '#' -f2 | sed 's/\;//g')
-if [ "$CUR_BGND_C" =! "${BGND_C}"]; then
+if [ "$CUR_BGND_C" != "${BGND_C}"]; then
 	echo "---Set background color to: #${BGND_C}---"
 	sed -i "/background-color: #/c\      background-color: #${BGND_C};" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 else
@@ -75,7 +75,7 @@ if [ -z "${DOSBOX_V}" ]; then
 	DOSBOX_V="wdosbox-nosync"
 fi
 CUR_DOSBOX_V=$(grep -e 'wdosboxUrl: "' ${SERVER_DIR}/"${APP_NAME}"/public/index.html | cut -d "/" -f2 |cut -d "." -f1)
-if [ "$CUR_DOSBOX_V" =! "${DOSBOX_V}"]; then
+if [ "$CUR_DOSBOX_V" != "${DOSBOX_V}"]; then
 	echo "---Set Dosbox variant to: ${DOSBOX_V}---"
 	sed -i "/Dos(canvas, { wdosboxUrl: \"/c\      Dos(canvas, { wdosboxUrl: \"\/${DOSBOX_V}.js\", autolock: true }).ready((fs, main) => {" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 else
