@@ -8,7 +8,7 @@ RUN curl -sL https://deb.nodesource.com/setup_13.x | bash -
 RUN apt-get -y install nodejs
 
 ENV SERVER_DIR=/jsdos
-ENV APP_NAME="Civilisazion"
+ENV APP_NAME="CivilisazionBI"
 ENV ZIP_NAME="civ.zip"
 ENV START_FILE="CIV.EXE"
 ENV BGND_C="1f1f1f"
