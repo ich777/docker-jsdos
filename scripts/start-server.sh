@@ -20,7 +20,7 @@ fi
 if [ "$APP_NAME" == "CivilisazionBI" ]; then
 	if [ ! -d ${SERVER_DIR}/CivilisazionBI ]; then 
 		cd ${SERVER_DIR}
-		if wget https://github.com/ich777/docker-jsdos/raw/master/civ.zip ; then
+		if wget -qO https://github.com/ich777/docker-jsdos/raw/master/civ.zip ; then
 			echo "---No game specified, downloaded Civilisazion!---"
 		else
 			echo "---Something went wrong, can't download initial game, putting server in sleep mode---"
@@ -48,13 +48,13 @@ if [ -z "$FAV" ]; then
 	echo "---index.html not properly setup, downloading---"
 	cd "${SERVER_DIR}/${APP_NAME}/public"
     rm "${SERVER_DIR}/${APP_NAME}/public/index.html"
-	if wget https://github.com/ich777/docker-jsdos/raw/master/favicon.ico ; then
+	if wget -qO https://github.com/ich777/docker-jsdos/raw/master/favicon.ico ; then
 		echo "---Sucessfully downloaded 'favicon.ico'---"
 	else
 		echo "---Something went wrong, can't download 'favicon.ico', continuing---"
 		sleep infinity
 	fi    
-	if wget https://raw.githubusercontent.com/ich777/docker-jsdos/master/config/index.html ; then
+	if wget -qO https://raw.githubusercontent.com/ich777/docker-jsdos/master/config/index.html ; then
 		echo "---Sucessfully downloaded 'index.html'---"
 	else
 		echo "---Something went wrong, can't download 'index.html', putting server in sleep mode---"
