@@ -1,64 +1,94 @@
-
 #!/bin/bash
 echo "---Setting umask to ${UMASK}---"
 umask ${UMASK}
 
 if [ -z "${APP_NAME}" ]; then
-        echo "---Variable 'APP_NAME' can't be empty, putting server into sleep mode---"
-        sleep infinity
+	APP_NAME="CivilisazionBI"
 fi
 if [ -z "${ZIP_NAME}" ]; then
-        echo "---Variable 'ZIP_NAME' can't be empty, putting server into sleep mode---"
-        sleep infinity
+	ZIP_NAME="civ.zip"
 fi
 if [ -z "${START_FILE}" ]; then
-        echo "---Variable 'START_FILE' can't be empty, putting server into sleep mode---"
-        sleep infinity
+	START_FILE="CIV.EXE"
 fi
-if [ -z "${BG_COLOR}" ]; then
-        echo "---Variable 'BG_COLOR' can't be empty, putting server into sleep mode---"
-        sleep infinity
+if [ -z "${BGND_COLOR}" ]; then
+	BGND_C="1f1f1f"
 fi
-if [ ! -d ${SERVER_DIR}/${APP_NAME} ]; then
-        echo "---Installing ${APP_NAME}---"
-    if [ ! -f ${SERVER_DIR}/${ZIP_NAME}.zip ]; then
+if [ -z "${DOSBOX_V}" ]; then
+	DOSBOX_V="wdosbox-nosync"
+fi
+if [ "$APP_NAME" == "CivilisazionBI" ]; then
+	if wget https://github.com/ich777/docker-jsdos/raw/master/civ.zip ; then
+		echo "---No game specified, downloaded Civilisazion!---"
+	else
+		echo "---Something went wrong, can't download initial game, putting server in sleep mode---"
+		sleep infinity
+	fi
+fi
+
+if [ ! -d "${SERVER_DIR}/${APP_NAME}" ]; then
+        echo "---Installing '${APP_NAME}'---"
+    if [ ! -f "${SERVER_DIR}/${ZIP_NAME}.zip" ]; then
         echo "---File '${ZIP_NAME}.zip' not found, putting server into sleep mode---"
         sleep infinity
-        fi
-        cd ${SERVER_DIR}
-        npx create-dosbox ${APP_NAME} ${ZIP_NAME}.zip
-        cd ${SERVER_DIR}/${APP_NAME}
-        sed '2a\<style>\n\tbackground-color: #000000;\n}\n</style>' ${SERVER_DIR}/${APP_NAME}/public/index.html
-        sed -i '/fs.extract("/c\\tfs.extract("'${ZIP_NAME}'.zip", "/GAME").then(() => {' ${SERVER_DIR}/${APP_NAME}/public/index.html
-        sed -i '/main(\["-c", "/c\\t\tmain(\["-c", "cd GAME", "-c", "'${START_FILE}'"\])' ${SERVER_DIR}/${APP_NAME}/public/index.html
-        echo "\n" | npm install
+    fi
+    cd ${SERVER_DIR}
+    echo "\n" | npx create-dosbox "${APP_NAME}" "${ZIP_NAME}.zip"
+    cd "${SERVER_DIR}/${APP_NAME}"
+    npm install
 fi
 
 echo "---Preparing Server---"
-echo "---Resolution check---"
-if [ -z "${CUSTOM_RES_W} ]; then
-        CUSTOM_RES_W=640
-fi
-if [ -z "${CUSTOM_RES_H} ]; then
-        CUSTOM_RES_H=400
+echo "---Checking if everything is setup correctly---"
+FAV=$(grep -e 'favicon.ico' ${SERVER_DIR}/"${APP_NAME}"/public/index.html)
+if [ -z "$FAV" ]; then
+	echo "---index.html not properly setup, downloading---"
+	cd "${SERVER_DIR}/${APP_NAME}/public"
+    rm "${SERVER_DIR}/${APP_NAME}/public/index.html"
+	if wget https://github.com/ich777/docker-jsdos/raw/master/favicon.ico ; then
+		echo "---Sucessfully downloaded 'favicon.ico'---"
+	else
+		echo "---Something went wrong, can't download 'favicon.ico', continuing---"
+		sleep infinity
+	fi    
+	if wget https://raw.githubusercontent.com/ich777/docker-jsdos/master/config/index.html ; then
+		echo "---Sucessfully downloaded 'index.html'---"
+	else
+		echo "---Something went wrong, can't download 'index.html', putting server in sleep mode---"
+		sleep infinity
+	fi
 fi
 
-if [ "${CUSTOM_RES_W}" -le 639 ]; then
-        echo "---Width to low must be a minimal of 640 pixels, correcting to 640...---"
-    CUSTOM_RES_W=640
+echo "---Background color check---"
+CUR_BGND_C=$(grep -e 'background-color:' ${SERVER_DIR}/"${APP_NAME}"/public/index.html | cut -d '#' -f2 | sed 's/\;//g')
+if [ "$CUR_BGND_C" =! "${BGND_C}"]; then
+	echo "---Set background color to: #${BGND_C}---"
+	sed -i "/background-color: #/c\      background-color: #${BGND_C};" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+else
+	echo "---Background color: #${BGND_C}---"
 fi
-
-if [ "${CUSTOM_RES_H}" -le 399 ]; then
-        echo "---Height to low must be a minimal of 400 pixels, correcting to 400...---"
-    CUSTOM_RES_H=400
+echo "---Dosbox varion check---"
+if [ -z "${DOSBOX_V}" ]; then
+	DOSBOX_V="wdosbox-nosync"
 fi
-sed -i '/width: /c\\twidth: '${CUSTOMR_RES_W}'px;' ${SERVER_DIR}/${APP_NAME}/public/index.html
-sed -i '/height: /c\\theight: '${CUSTOMR_RES_H}'px;' ${SERVER_DIR}/${APP_NAME}/public/index.html
-sed '2a\<style>\n\tbackground-color: #'${BG_COLOR}';\n}\n</style>' ${SERVER_DIR}/${APP_NAME}/public/index.html
+CUR_DOSBOX_V=$(grep -e 'wdosboxUrl: "' ${SERVER_DIR}/"${APP_NAME}"/public/index.html | cut -d "/" -f2 |cut -d "." -f1)
+if [ "$CUR_DOSBOX_V" =! "${DOSBOX_V}"]; then
+	echo "---Set Dosbox variant to: ${DOSBOX_V}---"
+	sed -i "/Dos(canvas, { wdosboxUrl: \"/c\      Dos(canvas, { wdosboxUrl: \"\/${DOSBOX_V}.js\", autolock: true }).ready((fs, main) => {" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+else
+	echo "---Dosbox variant: ${DOSBOX_V}---"
+fi
+echo "---Writing configuration---"
+sed -i "/fs.extract(\"/c\        fs.extract(\"${ZIP_NAME}.zip\", \"\/game\").then(() => {" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+sed -i "/main(\[\"-c\", \"cd game\", \"/c\        main(\[\"-c\", \"cd game\", \"-c\", \"${START_FILE}\"]).then((ci) => {" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 
-
+if [ "${FPS_C}" == "true" ]; then
+	sed "/(function(){var script=document.createElement(/c\    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+else
+	sed "/(function(){var script=document.createElement(/c\\/\/    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
+fi
 chmod -R 777 ${SERVER_DIR}
 
 echo "---Starting Application: ${APP_NAME}---"
-cd ${SERVER_DIR}/${APP_NAME}
+cd "${SERVER_DIR}/${APP_NAME}"
 npm start
