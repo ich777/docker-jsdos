@@ -1,11 +1,12 @@
-FROM ubuntu
+FROM ich777/debian-baseimage
 
-MAINTAINER ich777
+LABEL maintainer="admin@minenet.at"
 
-RUN apt-get update
-RUN apt-get -y install wget curl
-RUN curl -sL https://deb.nodesource.com/setup_13.x | bash -
-RUN apt-get -y install nodejs
+RUN apt-get update && \
+	apt-get -y install --no-install-recommends curl && \
+	curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
+	apt-get -y install --no-install-recommends nodejs && \
+	rm -rf /var/lib/apt/lists/*
 
 ENV SERVER_DIR=/jsdos
 ENV APP_NAME="CivilisazionBI"
@@ -18,15 +19,14 @@ ENV UMASK=000
 ENV UID=99
 ENV GID=100
 
-RUN mkdir $SERVER_DIR
-RUN useradd -d $SERVER_DIR -s /bin/bash --uid $UID --gid $GID jsdos
-RUN chown -R jsdos $SERVER_DIR
-
-RUN ulimit -n 2048
+RUN mkdir $SERVER_DIR && \
+	useradd -d $SERVER_DIR -s /bin/bash --uid $UID --gid $GID jsdos && \
+	chown -R jsdos $SERVER_DIR && \
+	ulimit -n 2048
 
 ADD /scripts/ /opt/scripts/
-RUN chmod -R 770 /opt/scripts/
-RUN chown -R jsdos /opt/scripts/
+RUN chmod -R 770 /opt/scripts/ && \
+	chown -R jsdos /opt/scripts/
 
 USER jsdos
 
