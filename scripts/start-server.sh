@@ -1,7 +1,4 @@
 #!/bin/bash
-echo "---Setting umask to ${UMASK}---"
-umask ${UMASK}
-
 if [ -z "${APP_NAME}" ]; then
 	APP_NAME="CivilisazionBI"
 fi
@@ -87,7 +84,7 @@ if [ "${FPS_C}" == "true" ]; then
 else
 	sed -i "/(function(){var script=document.createElement(/c\\/\/    (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()" "${SERVER_DIR}/${APP_NAME}/public/index.html"
 fi
-chmod -R 777 ${SERVER_DIR}
+chmod -R ${DATA_PERM} ${SERVER_DIR}
 
 echo "---Starting Application: ${APP_NAME}---"
 cd "${SERVER_DIR}/${APP_NAME}"
