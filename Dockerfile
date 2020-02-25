@@ -18,17 +18,16 @@ ENV DOSBOX_V="wdosbox-nosync"
 ENV UMASK=000
 ENV UID=99
 ENV GID=100
+ENV DATA_PERM=770
+ENV USER="jsdos"
 
 RUN mkdir $SERVER_DIR && \
-	useradd -d $SERVER_DIR -s /bin/bash --uid $UID --gid $GID jsdos && \
-	chown -R jsdos $SERVER_DIR && \
+	useradd -d $SERVER_DIR -s /bin/bash $USER && \
+	chown -R $USER $SERVER_DIR && \
 	ulimit -n 2048
 
 ADD /scripts/ /opt/scripts/
-RUN chmod -R 770 /opt/scripts/ && \
-	chown -R jsdos /opt/scripts/
-
-USER jsdos
+RUN chmod -R 770 /opt/scripts/
 
 #Server Start
-ENTRYPOINT ["/opt/scripts/start-server.sh"]
+ENTRYPOINT ["/opt/scripts/start.sh"]
